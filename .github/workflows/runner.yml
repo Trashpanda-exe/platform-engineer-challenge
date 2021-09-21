@@ -1,0 +1,17 @@
+name: Docker Runner
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the tagged Docker image
+      run: docker build . --file Dockerfile --tag test:${{steps.vars.outputs.tag}}
+    - name: Run the Docker Image
+      run: docker container run test:${{steps.vars.outputs.tag}} --env API_URL=${{ secrets.API_URL }}
+    
